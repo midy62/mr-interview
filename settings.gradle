@@ -1,0 +1,5 @@
+rootProject.name = 'interview'
+
+include 'webservice'
+include 'business'
+include 'data'

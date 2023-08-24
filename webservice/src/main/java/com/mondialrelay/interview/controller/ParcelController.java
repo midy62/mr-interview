@@ -15,11 +15,24 @@ public class ParcelController {
 
     private ParcelService parcelService;
 
+    /**
+     * Updates an existing parcel's information.
+     *
+     * @param parcelId      The ID of the parcel to update.
+     * @param updatedParcel The updated parcel information.
+     * @return A ResponseEntity containing the updated parcel DTO.
+     */
     @PutMapping("/{parcelId}")
     public ResponseEntity<ParcelDto> updateParcel(@PathVariable Long parcelId, @RequestBody ParcelDto updatedParcel) {
         return ResponseEntity.ok(parcelService.updateParcel(parcelId, updatedParcel));
     }
 
+    /**
+     * Deletes a parcel by its ID.
+     *
+     * @param parcelId The ID of the parcel to delete.
+     * @return A ResponseEntity with no content.
+     */
     @DeleteMapping("/{parcelId}")
     public ResponseEntity<Void> deleteParcel(@PathVariable Long parcelId) {
         parcelService.deleteParcel(parcelId);

@@ -1,5 +1,6 @@
 package com.mondialrelay.interview.controller;
 
+import com.mondialrelay.business.dto.ParcelDto;
 import com.mondialrelay.business.dto.ShipmentDto;
 import com.mondialrelay.business.service.ShipmentService;
 import lombok.AllArgsConstructor;
@@ -16,15 +17,36 @@ import static org.springframework.http.HttpStatus.CREATED;
 @AllArgsConstructor
 public class ShipmentController {
 
-    private ShipmentService service;
+    private ShipmentService shipmentService;
 
     @GetMapping
     public Collection<ShipmentDto> findShipments() {
-        return service.findShipments();
+        return shipmentService.findShipments();
     }
 
     @PostMapping
     public ResponseEntity<ShipmentDto> createShipment(final @RequestBody ShipmentDto dto) {
-        return ResponseEntity.status(CREATED).body(service.createShipment(dto));
+        return ResponseEntity.status(CREATED).body(shipmentService.createShipment(dto));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ShipmentDto> updateShipment(@PathVariable final Long id, @RequestBody final ShipmentDto shipment) {
+        return ResponseEntity.ok(shipmentService.updateShipment(id, shipment));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteShipment(@PathVariable final Long id) {
+        shipmentService.deleteShipment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{shipmentId}/parcels")
+    public ResponseEntity<ParcelDto> createParcelForShipment(
+            @PathVariable Long shipmentId,
+            @RequestBody ParcelDto parcel
+    ) {
+        final var createdParcel = shipmentService.createParcelForShipment(shipmentId, parcel);
+        return ResponseEntity.status(CREATED).body(createdParcel);
+    }
+
 }

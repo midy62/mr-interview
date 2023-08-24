@@ -17,10 +17,10 @@ public class Shipment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_SHIPMENT_GEN")
     private Long id;
 
-    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Parcel> parcels = new LinkedHashSet<>();
 
-    private long shipmentNumber;
+    private long trackingNumber;
 
     public void addParcel(final Parcel parcel) {
         parcels.add(parcel);

@@ -14,7 +14,7 @@ public class ShipmentDto implements Serializable {
     private Long id;
     @JsonManagedReference
     private Set<ParcelDto> parcels = new LinkedHashSet<>();
-    private long shipmentNumber;
+    private long trackingNumber;
 
     public void addParcel(final ParcelDto dto) {
         parcels.add(dto);

@@ -9,3 +9,9 @@ spring:
     console.enabled: true
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+
+
+  cache:
+    jcache:
+      config: classpath:ehcache.xml

@@ -20,6 +20,7 @@ public class Parcel {
     @JoinColumn(name = "shipment_id", nullable = false)
     private Shipment shipment;
 
+    @Column(unique = true)
     private short sequence;
 
 }

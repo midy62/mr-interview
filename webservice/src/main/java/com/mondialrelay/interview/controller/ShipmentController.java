@@ -25,8 +25,8 @@ public class ShipmentController {
      * @return A collection of shipment DTOs.
      */
     @GetMapping
-    public Collection<ShipmentDto> findShipments() {
-        return shipmentService.findShipments();
+    public Collection<ShipmentDto> retrieveShipments() {
+        return shipmentService.getShipments();
     }
 
     /**
@@ -62,6 +62,17 @@ public class ShipmentController {
     public ResponseEntity<Void> deleteShipment(@PathVariable final Long id) {
         shipmentService.deleteShipment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Retrieves a collection of Parcel associated with the specified shipment.
+     *
+     * @param shipmentId The ID of the shipment for which to retrieve parcels.
+     * @return A collection of ParcelDto objects associated with the given shipment.
+     */
+    @GetMapping("/{shipmentId}/parcels")
+    public Collection<ParcelDto> retrieveParcelsForShipment(@PathVariable Long shipmentId) {
+        return shipmentService.getParcelsForShipment(shipmentId);
     }
 
     /**

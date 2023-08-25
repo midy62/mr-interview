@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +40,7 @@ public class ShipmentService {
      *
      * @return A collection of shipment DTOs.
      */
-    public Collection<ShipmentDto> findShipments() {
+    public Collection<ShipmentDto> getShipments() {
         return repository.findAll().stream().map(mapper::map).collect(toList());
     }
 
@@ -50,6 +51,12 @@ public class ShipmentService {
      * @return The DTO of the newly created shipment.
      */
     public ShipmentDto createShipment(final ShipmentDto dto) {
+        if (dto.getId() != null) {
+            throw new IllegalArgumentException("Cannot specify an ID for shipment creation.");
+        }
+        if (dto.getParcels().stream().map(ParcelDto::getId).anyMatch(Objects::nonNull)) {
+            throw new IllegalArgumentException("Cannot specify an ID for parcel creation within the shipment.");
+        }
         final var shipment = mapper.map(dto);
         final var entity = repository.save(shipment);
         return mapper.map(entity);
@@ -76,8 +83,10 @@ public class ShipmentService {
 
     private void validateParcelIdsLinkedToShipment(final Collection<Parcel> existingParcels, final Collection<ParcelDto> updatedParcels) {
         final var isInvalidParcel = updatedParcels.stream()
-                .anyMatch(updatedParcel -> existingParcels.stream()
-                        .noneMatch(existingParcel -> existingParcel.getId().equals(updatedParcel.getId())));
+                .map(ParcelDto::getId)
+                .anyMatch(updatedParcelId -> existingParcels.stream()
+                        .map(Parcel::getId)
+                        .noneMatch(existingParcelId -> existingParcelId.equals(updatedParcelId)));
         if (isInvalidParcel) {
             throw new IllegalArgumentException("One or more parcels are not linked to the shipment.");
         }
@@ -103,5 +112,15 @@ public class ShipmentService {
     public ParcelDto createParcelForShipment(final Long shipmentId, final ParcelDto dto) {
         final var shipment = getShipmentById(shipmentId);
         return parcelService.createParcel(dto, shipment);
+    }
+
+    /**
+     * Retrieves a list of Parcel associated with the specified shipment.
+     *
+     * @param shipmentId The ID of the shipment for which to retrieve parcels.
+     * @return A collection of ParcelDto objects associated with the given shipment.
+     */
+    public Collection<ParcelDto> getParcelsForShipment(final Long shipmentId) {
+        return parcelService.getParcels(shipmentId);
     }
 }

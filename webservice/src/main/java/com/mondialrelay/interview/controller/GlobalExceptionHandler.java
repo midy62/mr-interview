@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Void> handleEntityNotFoundException(final EntityNotFoundException e) {
+    public ResponseEntity<Void> handleEntityNotFoundException(final EntityNotFoundException ex) {
         return ResponseEntity.notFound().build();
     }
 

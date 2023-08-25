@@ -32,7 +32,7 @@ public class ShipmentStatusController {
      * @return A shipment's status or a list of shipment's statuses
      */
     @GetMapping
-    public ResponseEntity<Collection<ShipmentStatusDto>> getShipmentStatus(
+    public ResponseEntity<Collection<ShipmentStatusDto>> retrieveShipmentStatus(
             @RequestParam(required = false) final String code) {
         final Collection<ShipmentStatusDto> result;
         if (StringUtils.isNotEmpty(code)) {

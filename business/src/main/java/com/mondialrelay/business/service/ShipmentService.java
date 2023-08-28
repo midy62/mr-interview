@@ -71,14 +71,22 @@ public class ShipmentService {
      * @throws IllegalArgumentException If any of the parcel in {@code updatedShipmentDto} are not linked to the shipment.
      */
     public ShipmentDto updateShipment(final Long id, final ShipmentDto updatedShipmentDto) {
+
+        // Reload existing shipment from database
         final var existingShipment = getShipmentById(id);
         final var updatedShipment = mapper.map(updatedShipmentDto);
         existingShipment.setTrackingNumber(updatedShipment.getTrackingNumber());
+
+        // Save shipment
         final var dto = mapper.map(repository.save(existingShipment));
-        // Validate and update parcels
+
+        // Validate parcels
         validateParcelIdsLinkedToShipment(existingShipment.getParcels(), updatedShipmentDto.getParcels());
+
+        // Save associated parcels
         dto.setParcels(parcelService.updateParcels(updatedShipmentDto.getParcels()));
         return dto;
+
     }
 
     private void validateParcelIdsLinkedToShipment(final Collection<Parcel> existingParcels, final Collection<ParcelDto> updatedParcels) {
